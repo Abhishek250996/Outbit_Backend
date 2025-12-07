@@ -190,11 +190,17 @@ const submitContact = (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { name, email, message } = req.body;
+  const { name, email, message, created_at } = req.body;
+
+  // If created_at is provided → use it
+  // Else → use current server time
+  const timestamp = created_at 
+    ? db.escape(created_at) 
+    : "CURRENT_TIMESTAMP()";
 
   const query = `
-    INSERT INTO contacts (name, email, message)
-    VALUES (${db.escape(name)}, ${db.escape(email)}, ${db.escape(message)})
+    INSERT INTO contacts (name, email, message, created_at)
+    VALUES (${db.escape(name)}, ${db.escape(email)}, ${db.escape(message)}, ${timestamp})
   `;
 
   db.query(query, (err) => {
@@ -210,6 +216,7 @@ const submitContact = (req, res) => {
     });
   });
 };
+
 // const submitContact = (req, res) => {
 //   const { name, email, message } = req.body;
 
