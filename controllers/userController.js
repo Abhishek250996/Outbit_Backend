@@ -181,5 +181,95 @@ const login = (req, res) => {
   }); // <-- Properly closed db.query
 }; // <-- Closed login function
 
+/* ===========================
+    USER: SUBMIT CONTACT FORM
+=========================== */
+const submitContact = (req, res) => {
+  const { name, email, message } = req.body;
 
-module.exports = { register, verifyMail, login };
+  if (!name || !email || !message) {
+    return res.status(400).json({ msg: "All fields are required" });
+  }
+
+  const query = `
+    INSERT INTO contacts (name, email, message)
+    VALUES (${db.escape(name)}, ${db.escape(email)}, ${db.escape(message)})
+  `;
+
+  db.query(query, (err) => {
+    if (err) {
+      return res.status(500).send({
+        msg: "Database error",
+        error: err,
+      });
+    }
+
+    return res.status(200).json({
+      msg: "Message submitted successfully!",
+    });
+  });
+};
+
+/* ===========================
+    ADMIN: GET ALL CONTACTS
+=========================== */
+const getAllContacts = (req, res) => {
+  if (!req.user) {
+    return res.status(401).json({ msg: "Invalid or missing token" });
+  }
+
+  const query = `
+    SELECT id, name, email, message, status, created_at
+    FROM contacts
+    ORDER BY created_at DESC
+  `;
+
+  db.query(query, (err, rows) => {
+    if (err) {
+      return res.status(500).json({
+        msg: "Database error",
+        error: err,
+      });
+    }
+
+    return res.status(200).json({ data: rows });
+  });
+};
+
+
+/* ===========================
+    ADMIN: GET SINGLE CONTACT
+=========================== */
+const getContactById = (req, res) => {
+  if (!req.user) {
+    return res.status(401).json({ msg: "Invalid or missing token" });
+  }
+
+  const { id } = req.params;
+
+  const query = `SELECT * FROM contacts WHERE id = ${db.escape(id)} LIMIT 1`;
+
+  db.query(query, (err, rows) => {
+    if (err) {
+      return res.status(500).json({
+        msg: "Database error",
+        error: err,
+      });
+    }
+
+    if (rows.length === 0) {
+      return res.status(404).json({ msg: "Message not found" });
+    }
+
+    return res.status(200).json({ data: rows[0] });
+  });
+};
+
+module.exports = {
+  register,
+  verifyMail,
+  login,
+  submitContact,
+  getAllContacts,
+  getContactById
+};

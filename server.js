@@ -10,6 +10,8 @@ const path = require("path");
 // Backend Routes
 const userRouter = require("./routes/userRoute");
 const webRouter = require("./routes/webRoute");
+const contactRoutes = require("./routes/contactRoutes");
+
 
 // Chatbot Deps
 const { Groq } = require("groq-sdk");
@@ -28,6 +30,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // ===============================
 app.use("/api", userRouter);
 app.use("/", webRouter);
+app.use("/api", contactRoutes);
 
 // ===============================
 //        INIT CHATBOT SERVICES
