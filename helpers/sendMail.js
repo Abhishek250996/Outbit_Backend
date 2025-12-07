@@ -25,7 +25,7 @@ const sendMail = async (email, mailSubject, content) => {
 
         // Send the email and handle errors or success
         const info = await transport.sendMail(mailOptions);
-        console.log("Mail Sent Successfully!:", info.response);
+        // console.log("Mail Sent Successfully!:", info.response);
         return info; // Return info if needed for further operations
     } catch (error) {
         console.error("Error sending mail:", error.message);

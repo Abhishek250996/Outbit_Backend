@@ -102,7 +102,7 @@ const verifyMail = (req, res) => {
 
   db.query("SELECT * FROM users WHERE token=? LIMIT 1", token, (err, result) => {
     if (err) {
-      console.log(err.message);
+      // console.log(err.message);
       return res.render("404");
     }
 
