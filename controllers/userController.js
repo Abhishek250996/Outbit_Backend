@@ -185,11 +185,12 @@ const login = (req, res) => {
     USER: SUBMIT CONTACT FORM
 =========================== */
 const submitContact = (req, res) => {
-  const { name, email, message } = req.body;
-
-  if (!name || !email || !message) {
-    return res.status(400).json({ msg: "All fields are required" });
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
   }
+
+  const { name, email, message } = req.body;
 
   const query = `
     INSERT INTO contacts (name, email, message)
@@ -209,6 +210,31 @@ const submitContact = (req, res) => {
     });
   });
 };
+// const submitContact = (req, res) => {
+//   const { name, email, message } = req.body;
+
+//   if (!name || !email || !message) {
+//     return res.status(400).json({ msg: "All fields are required" });
+//   }
+
+//   const query = `
+//     INSERT INTO contacts (name, email, message)
+//     VALUES (${db.escape(name)}, ${db.escape(email)}, ${db.escape(message)})
+//   `;
+
+//   db.query(query, (err) => {
+//     if (err) {
+//       return res.status(500).send({
+//         msg: "Database error",
+//         error: err,
+//       });
+//     }
+
+//     return res.status(200).json({
+//       msg: "Message submitted successfully!",
+//     });
+//   });
+// };
 
 /* ===========================
     ADMIN: GET ALL CONTACTS

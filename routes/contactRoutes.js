@@ -8,7 +8,7 @@ const {
 
 const auth = require("../middleware/auth");
 const { validateContact } = require("../validators/contactValidation");
-
+ 
 // ADMIN ROUTES
 router.get("/admin/contacts", auth, getAllContacts);
 router.get("/admin/contacts/:id", auth, getContactById);
