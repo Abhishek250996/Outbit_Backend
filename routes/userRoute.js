@@ -28,7 +28,7 @@ const { signupValidation, loginValidation } = require("../helpers/validation"); 
 const userController = require("../controllers/userController"); // Ensure this path is correct
 
 // Debugging imports
-console.log({ signupValidation,loginValidation, userController });
+// console.log({ signupValidation,loginValidation, userController });
 
 // Route for user registration
 router.post(
